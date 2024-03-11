@@ -32,7 +32,7 @@ print(f"Игорь может использовать {total_code_words} код
 * `total_code_words = count_code_words()`: Вызываем функцию count_code_words и сохраняем результат в переменной `total_code_words`.
 *  print(f"Игорь может использовать `{total_code_words}` кодовых слов."): Печатаем сообщение, указывающее на количество кодовых слов, которые Игорь может использовать, используя форматированную строку, где `{total_code_words}` заменяется на фактическое количество кодовых слов.
 #### Результат выполнения программы 
-![result1](https://github.com/Lemka6ix/Lab2/blob/main/1%20.png)
+![result1](https://github.com/Lemka6ix/Python/blob/main/lab2/images/1%20.png)
 
 
 
@@ -62,7 +62,7 @@ print("Кол-во значимых нулей - ", zeros_count)
 * Удаляем первые два знака у числа, котроые появились после перевода
 * Считаем количество значащих нулей у этого числа
 #### Результат выполнения программы 
-![result2](https://github.com/Lemka6ix/Lab2/blob/main/1212.png)
+![result2](https://github.com/Lemka6ix/Python/blob/main/lab2/images/1212.png)
 
 
 ## №3
@@ -95,7 +95,7 @@ def find_numbers():
 find_numbers()
 ```
 #### Результат выполнения программы 
-![result3](https://github.com/Lemka6ix/Lab2/blob/main/1333.png)
+![result3](https://github.com/Lemka6ix/Python/blob/main/lab2/images/1333.png)
 
 * Создаём функцию, начинаем поиск чисел, начиная с `600000`
 * Начинаем цикл `while`, с помощью которого будут найдены `5` чисел
