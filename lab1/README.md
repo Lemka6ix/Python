@@ -42,7 +42,7 @@ print(distances)
 ```
 
 ## Результат
-![im1](https://github.com/Lemka6ix/lab1/blob/main/images/00.png)
+![im1](https://github.com/Lemka6ix/Python/blob/main/lab1/images/00.png)
 
 # 01
 
@@ -75,7 +75,7 @@ print(ins_curcle(point_2, radius))
 ```
 
 ## Резуьтат
-![im2](https://github.com/Lemka6ix/lab1/blob/main/images/01.png)
+![im2](https://github.com/Lemka6ix/Python/blob/main/lab1/images/01.png)
 
 
 # 02
@@ -88,7 +88,7 @@ res = 1 * 2 + 3 + 4 * 5
 print(res)
 ```
 ## Результат
-![imss](https://github.com/Lemka6ix/lab1/blob/main/images/02.png)
+![imss](https://github.com/Lemka6ix/Python/blob/main/lab1/images/02.png)
 
 
 # 03
@@ -135,7 +135,7 @@ print(my_favorite_movies[-22:-17])
 
 
 ## Результат
-![sssss](https://github.com/Lemka6ix/lab1/blob/main/images/03.png)
+![sssss](https://github.com/Lemka6ix/Python/blob/main/lab1/images/03.png)
 
 
 # 04
@@ -177,7 +177,7 @@ print(f'Общий рост моей семьи - {total_height} см')
    - [person[1] for person in my_family_height] извлекает все значения роста из списка.
    - sum(...) используется для нахождения суммы всех ростов.
 ## Результат
-![pedd](https://github.com/Lemka6ix/lab1/blob/main/images/04.png)
+![pedd](https://github.com/Lemka6ix/Python/blob/main/lab1/images/04.png)
 
 
 
@@ -198,7 +198,7 @@ zoo = ['lion', 'kangaroo', 'elephant', 'monkey', ]
 * `larkcage = zoo.index('lark') + 1`: Далее находим индекс 'lion' в списке zoo и добавляем 1, чтобы получить номер клетки для льва. Индексы в списке начинаются с 0, но по смыслу для пользователя клетки нумеруются с 1.
 * Аналогично находим индекс 'lark' в списке zoo и добавляем 1 для определения клетки, в которой находится жаворонок.
 ## Результат
-![deds](https://github.com/Lemka6ix/lab1/blob/main/images/05.png)
+![deds](https://github.com/Lemka6ix/Python/blob/main/lab1/images/05.png)
 
 
 
@@ -292,7 +292,7 @@ new_list = [выражение for элемент in последователь�
 * `total_time_other = sum(violator_songs_dict[song] for song in ['Sweetest Perfection', 'Policy of Truth', 'Blue Dress'])`: Здесь суммируем длительности песен `'Sweetest Perfection'`, `'Policy of Truth'` и `'Blue Dress'`, используя их значения из словаря `violator_songs_dict`.
 
 ## Результат
-![dsdsdd](https://github.com/Lemka6ix/lab1/blob/main/images/06.png)
+![dsdsdd](https://github.com/Lemka6ix/Python/blob/main/lab1/images/06.png)
 
 
 
@@ -330,7 +330,7 @@ print(mess)
 * Извлекаем символы с индексами от 20 до 15 в обратном порядке из пятого элемента secret_message. Это поможет нам получить пятое слово.
 * Комбинируем отдельные слова в одну строку с пробелами между ними, используя обратные кавычки (f-string) для форматирования строки
 ## Результат
-![shgjkv](https://github.com/Lemka6ix/lab1/blob/main/images/07.png)
+![shgjkv](https://github.com/Lemka6ix/Python/blob/main/lab1/images/07.png)
 
 
 # 08
@@ -376,7 +376,7 @@ print("Только на лугу: ", meadowonly)
 > my_set = set(my_list)
 > print(my_set)  # Выведет: {1, 2, 3, 4}```
 ## Результат
-![nccvcbg](https://github.com/Lemka6ix/lab1/blob/main/images/08.png)
+![nccvcbg](https://github.com/Lemka6ix/Python/blob/main/lab1/images/08.png)
 
 
 # 09
@@ -521,7 +521,7 @@ print('Стул -', chair_quantity, 'шт, стоимость', chair_cost, 'р�
 * Вычисляем общую стоимость всех стульев на складе.
 
 ## Результат
-![rar](https://github.com/Lemka6ix/lab1/blob/main/images/10.png)
+![rar](https://github.com/Lemka6ix/Python/blob/main/lab1/images/10.png)
 
 _____
 
