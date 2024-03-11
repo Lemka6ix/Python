@@ -32,7 +32,7 @@ print(plen([1, 2, 3], 2))
 * После прохода по всем элементам списка, все найденные перестановки хранятся в `result`.
 
 ### Результат выполнения программы
-![result1](https://github.com/Lemka6ix/lab3/blob/main/%D0%90/3.1.png)
+![result1](https://github.com/Lemka6ix/Python/blob/main/lab3/%D0%90/3.1.png)
 
 ## №1.2 (без рекурсии)
 ### Задание 
@@ -93,7 +93,7 @@ print(f"Результат вычисления x с индексом {index} с
 * Это происходит до тех пор, пока не будет достигнут базовый случай $i$ == 0.
 
 ### Результат
-![result3](https://github.com/Lemka6ix/lab3/blob/main/%D0%90/3.2.png)
+![result3](https://github.com/Lemka6ix/Python/blob/main/lab3/%D0%90/3.2.png)
 
 ## №2.2 (без рекурсии)
 ### Задание 
@@ -117,4 +117,4 @@ print(f"Результат вычисления x с индексом {index} б
 * Таким образом, цикл проходит через все значения от 1 до i, обновляя result согласно указанной формуле. 
 
 ### Результат
-![result4](https://github.com/Lemka6ix/lab3/blob/main/%D0%90/3.2%D0%B1%D0%B5%D0%B7%D1%80%D0%B5%D0%BA.png)
+![result4](https://github.com/Lemka6ix/Python/blob/main/lab3/%D0%90/3.2%D0%B1%D0%B5%D0%B7%D1%80%D0%B5%D0%BA.png)
