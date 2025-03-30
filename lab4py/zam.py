@@ -11,5 +11,5 @@ def get_primes(n):
     return primes
 
 
-primes = get_primes(100)
+primes = get_primes(10)
 print(primes)
