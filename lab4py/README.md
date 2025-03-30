@@ -17,7 +17,7 @@ def get_primes(n):
     return primes
 
 
-primes = get_primes(100)
+primes = get_primes(10)
 print(primes)
 ```
 * Создаёт пустой список `primes` для хранения простых чисел.
@@ -50,7 +50,7 @@ def time_limit(timeout):
     return decorator
 
 
-@time_limit(2)
+@time_limit(1)
 def get_primes(n):
     primes = []
     for num in range(2, n + 1):
@@ -65,7 +65,7 @@ def get_primes(n):
 
 
 try:
-    primes=get_primes(1000)
+    primes=get_primes(10000)
     print(primes)
 except TimeoutError:
     print("Функция превысила лимит времени")

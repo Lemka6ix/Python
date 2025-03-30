@@ -28,7 +28,7 @@ def get_primes(n):
 
 
 try:
-    primes=get_primes(100000)
+    primes=get_primes(10000)
     print(primes)
 except TimeoutError:
     print("Функция превысила лимит времени")
