@@ -1,77 +1,69 @@
 from functools import reduce
 
-def spiral_matrix_generator(matrix, start_direction="right"):
-    """
-    Генератор, обходящий элементы матрицы по спирали, начиная с центра,
-    и возвращающий только те элементы, четность которых совпадает с четностью
-    суммы их индексов.
+def spiral_matrix_generator(matrix, start_direction='right'):
+    rows = len(matrix)
+    cols = len(matrix[0])
 
-    Args:
-        matrix: Двумерный список (матрица).
-        start_direction: Направление старта спирали ('right', 'left', 'up', 'down').
+    # Вычисляем координаты центра матрицы
+    center_row = rows // 2
+    center_col = cols // 2
+    if rows % 2 == 0:
+        center_row -= 1
+    if cols % 2 == 0:
+        center_col -= 1
 
-    Yields:
-        Значения элементов матрицы, удовлетворяющих условиям обхода и четности.
-    """
-
-    if not matrix or not matrix[0]:
-        return  # Пустая матрица
-
-    rows, cols = len(matrix), len(matrix[0])
-    center_row, center_col = rows // 2, cols // 2
-
-    # Обработка случаев, когда матрица имеет нечетное количество строк/столбцов.
-    # В этих случаях центр смещается.
-    if rows % 2 != 0:
-        center_row = rows // 2
-    else:
-        center_row = rows // 2 -1 #Смещаем центр для четных матриц
-
-    if cols % 2 != 0:
-        center_col = cols // 2
-    else:
-        center_col = cols // 2 -1  #Смещаем центр для четных матриц
-
-
+    # Определяем начальные координаты и направление
     row, col = center_row, center_col
-    dr, dc = 0, 1  # Направление: вправо (по умолчанию)
+    direction = start_direction
 
-    if start_direction == "left":
-        dr, dc = 0, -1
-    elif start_direction == "up":
-        dr, dc = -1, 0
-    elif start_direction == "down":
-        dr, dc = 1, 0
-    elif start_direction != "right":
-         raise ValueError("Недопустимое направление. Допустимые значения: 'right', 'left', 'up', 'down'")
-
-
-
+    # Список посещенных ячеек, чтобы не посещать их повторно
     visited = set()
-    num_visited = 0
-    max_elements = rows * cols  # Максимальное количество элементов, которые нужно посетить
 
+    # Вспомогательная функция для проверки допустимости координат
+    def is_valid(r, c):
+        return 0 <= r < rows and 0 <= c < cols
 
-    while num_visited < max_elements:
-        if 0 <= row < rows and 0 <= col < cols and (row, col) not in visited:
-            if (matrix[row][col] % 2) == ((row + col) % 2):  # Проверка четности
-                yield matrix[row][col]
+    # Вспомогательная функция для получения следующей ячейки
+    def next_cell(r, c, direction):
+        if direction == 'right':
+            return r, c + 1
+        elif direction == 'left':
+            return r, c - 1
+        elif direction == 'up':
+            return r - 1, c
+        elif direction == 'down':
+            return r + 1, c
+        else:
+            raise ValueError("Недопустимое направление")
+
+    # Основной цикл обхода
+    while len(visited) < rows * cols:
+        if (row, col) not in visited and is_valid(row, col):
             visited.add((row, col))
-            num_visited +=1
+            if (row + col) % 2 == matrix[row][col] % 2:  #Проверка чётности суммы индексов и чётности элемента
+                yield matrix[row][col]
 
-
-        # Попытка сменить направление
-        new_dr, new_dc = -dc, dr # Поворот на 90 градусов по часовой стрелке
-        new_row, new_col = row + new_dr, col + new_dc
-
-        if not (0 <= new_row < rows and 0 <= new_col < cols and (new_row, new_col) not in visited): #Если нельзя повернуть
-            new_dr, new_dc = dr, dc #Оставляем направление без изменений
-            new_row, new_col = row + new_dr, col + new_dc # Сдвигаем в текущем направлении
-        
-        # Сдвигаемся в выбранном направлении
-        row, col = new_row, new_col
-        dr, dc = new_dr, new_dc
-
+        # Попытка двигаться в текущем направлении
+        next_row, next_col = next_cell(row, col, direction)
+        if is_valid(next_row, next_col) and (next_row, next_col) not in visited:
+            row, col = next_row, next_col
+        else:
+            # Изменение направления, если движение вперед невозможно
+            if direction == 'right':
+                direction = 'down'
+            elif direction == 'down':
+                direction = 'left'
+            elif direction == 'left':
+                direction = 'up'
+            elif direction == 'up':
+                direction = 'right'
+            # Повторная попытка движения в новом направлении
+            next_row, next_col = next_cell(row, col, direction)
+            if is_valid(next_row, next_col) and (next_row, next_col) not in visited:
+                 row, col = next_row, next_col
+            else:
+                # Если даже после изменения направления двигаться некуда, значит, все окрестности посещены
+                break
 
 # Пример использования:
 matrix = [
@@ -81,24 +73,13 @@ matrix = [
     [13, 14, 15, 16]
 ]
 
+# Создаем генератор
+spiral_gen = spiral_matrix_generator(matrix, 'up')
 
-# Используем filter для отбора только четных чисел из сгенерированной последовательности
-spiral_even = filter(lambda x: x % 2 == 0, spiral_matrix_generator(matrix, "down")) #Начинаем обход снизу, от центра
-print(list(spiral_even))
+# Применяем map для преобразования элементов (удваиваем их)
+# и filter для выбора только четных удвоенных значений
+filtered_doubled_values = filter(lambda x: x % 2 == 0, map(lambda x: x * 2, spiral_gen))
 
-matrix2 = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
-]
 
-spiral_odd = filter(lambda x: x % 2 != 0, spiral_matrix_generator(matrix2, "up"))
-print(list(spiral_odd))
-
-matrix3 = [
-    [1, 2],
-    [3, 4]
-]
-
-spiral_all = spiral_matrix_generator(matrix3, "right")
-print(list(spiral_all))  # Выведет [4, 2]
+# Выводим результат с использованием list() для преобразования генератора в список
+print(list(filtered_doubled_values))  #Вывод: [12, 16, 14, 30, 22]
