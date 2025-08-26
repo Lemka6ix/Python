@@ -109,10 +109,12 @@ class RecipeApp:
         self.catalog = RecipeCatalog()
         self.selected_recipe = None
         self.current_ingredients = []
+        self.ingredients_list = []  # Храним список ингредиентов для нового рецепта
+        self.search_ingredients_list = []  # Храним список ингредиентов для поиска
         
         dpg.create_context()
         self.setup_ui()
-        dpg.create_viewport(title='Recipe Catalog', width=800, height=600)
+        dpg.create_viewport(title='Recipe Catalog', width=1000, height=600)
         dpg.setup_dearpygui()
         dpg.show_viewport()
         dpg.start_dearpygui()
@@ -129,7 +131,7 @@ class RecipeApp:
                 dpg.add_button(label="Add", callback=self.add_ingredient)
             
             dpg.add_text("Ingredients:")
-            dpg.add_listbox(tag="ingredients_list", items=[], width=300, num_items=5)
+            dpg.add_listbox(tag="ingredients_list_display", items=self.ingredients_list, width=300, num_items=5)
             dpg.add_button(label="Remove Ingredient", callback=self.remove_ingredient)
             
             dpg.add_input_text(label="Instructions", tag="instructions", multiline=True, height=150, width=300)
@@ -142,7 +144,7 @@ class RecipeApp:
                 dpg.add_button(label="Add", callback=self.add_search_ingredient)
             
             dpg.add_text("Search by ingredients:")
-            dpg.add_listbox(tag="search_ingredients_list", items=[], width=300, num_items=5)
+            dpg.add_listbox(tag="search_ingredients_list_display", items=self.search_ingredients_list, width=300, num_items=5)
             dpg.add_button(label="Remove Ingredient", callback=self.remove_search_ingredient)
             dpg.add_button(label="Find Recipes", callback=self.search_recipes)
             
@@ -164,37 +166,35 @@ class RecipeApp:
         """Adds ingredient to new recipe"""
         ingredient = dpg.get_value("new_ingredient")
         if ingredient.strip():
-            current = dpg.get_value("ingredients_list")
-            current.append(ingredient.strip())
-            dpg.set_value("ingredients_list", current)
+            self.ingredients_list.append(ingredient.strip())
+            dpg.set_value("ingredients_list_display", self.ingredients_list)
             dpg.set_value("new_ingredient", "")
     
     def remove_ingredient(self, sender, app_data):
         """Removes ingredient from new recipe"""
-        selected = dpg.get_value("ingredients_list")
-        current = dpg.get_value("ingredients_list")
-        if selected and selected in current:
-            current.remove(selected)
-            dpg.set_value("ingredients_list", current)
+        selected = dpg.get_value("ingredients_list_display")
+        if selected and selected in self.ingredients_list:
+            self.ingredients_list.remove(selected)
+            dpg.set_value("ingredients_list_display", self.ingredients_list)
     
     def save_recipe(self, sender, app_data):
         """Saves new recipe"""
         try:
             name = dpg.get_value("recipe_name").strip()
-            ingredients = dpg.get_value("ingredients_list")
             instructions = dpg.get_value("instructions").strip()
             
             if not name:
                 raise InvalidIngredientError("Enter recipe name")
-            if not ingredients:
+            if not self.ingredients_list:
                 raise InvalidIngredientError("Add at least one ingredient")
             
-            recipe = Recipe(name, ingredients, instructions)
+            recipe = Recipe(name, self.ingredients_list.copy(), instructions)
             self.catalog.add_recipe(recipe)
             
             # Clear fields
             dpg.set_value("recipe_name", "")
-            dpg.set_value("ingredients_list", [])
+            self.ingredients_list = []
+            dpg.set_value("ingredients_list_display", [])
             dpg.set_value("instructions", "")
             dpg.set_value("new_ingredient", "")
             
@@ -205,24 +205,21 @@ class RecipeApp:
         """Adds search ingredient"""
         ingredient = dpg.get_value("search_ingredient")
         if ingredient.strip():
-            current = dpg.get_value("search_ingredients_list")
-            current.append(ingredient.strip())
-            dpg.set_value("search_ingredients_list", current)
+            self.search_ingredients_list.append(ingredient.strip())
+            dpg.set_value("search_ingredients_list_display", self.search_ingredients_list)
             dpg.set_value("search_ingredient", "")
     
     def remove_search_ingredient(self, sender, app_data):
         """Removes search ingredient"""
-        selected = dpg.get_value("search_ingredients_list")
-        current = dpg.get_value("search_ingredients_list")
-        if selected and selected in current:
-            current.remove(selected)
-            dpg.set_value("search_ingredients_list", current)
+        selected = dpg.get_value("search_ingredients_list_display")
+        if selected and selected in self.search_ingredients_list:
+            self.search_ingredients_list.remove(selected)
+            dpg.set_value("search_ingredients_list_display", self.search_ingredients_list)
     
     def search_recipes(self, sender, app_data):
         """Searches recipes by ingredients"""
         try:
-            ingredients = dpg.get_value("search_ingredients_list")
-            recipes = self.catalog.find_recipes_by_ingredients(ingredients)
+            recipes = self.catalog.find_recipes_by_ingredients(self.search_ingredients_list)
             dpg.set_value("found_recipes_list", [recipe.name for recipe in recipes])
         except RecipeError as e:
             self.show_error(str(e))
@@ -253,9 +250,8 @@ class RecipeApp:
             try:
                 self.catalog.remove_recipe(recipe_name)
                 # Update found recipes list
-                ingredients = dpg.get_value("search_ingredients_list")
-                if ingredients:
-                    recipes = self.catalog.find_recipes_by_ingredients(ingredients)
+                if self.search_ingredients_list:
+                    recipes = self.catalog.find_recipes_by_ingredients(self.search_ingredients_list)
                     dpg.set_value("found_recipes_list", [recipe.name for recipe in recipes])
                 else:
                     dpg.set_value("found_recipes_list", [])
