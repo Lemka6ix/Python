@@ -80,7 +80,7 @@ class RecipeCatalog:
     
     def find_recipes_by_ingredients(self, ingredients: List[str]) -> List[Recipe]:
         """Finds recipes containing all specified ingredients"""
-        if not ingredients:
+        if not ingredients or all(not i.strip() for i in ingredients):
             raise InvalidIngredientError("At least one ingredient must be specified")
         
         ingredient_set = {i.strip().lower() for i in ingredients if i.strip()}
@@ -163,9 +163,9 @@ class RecipeApp:
     def add_ingredient(self, sender, app_data):
         """Adds ingredient to new recipe"""
         ingredient = dpg.get_value("new_ingredient")
-        if ingredient:
+        if ingredient.strip():
             current = dpg.get_value("ingredients_list")
-            current.append(ingredient)
+            current.append(ingredient.strip())
             dpg.set_value("ingredients_list", current)
             dpg.set_value("new_ingredient", "")
     
@@ -173,16 +173,16 @@ class RecipeApp:
         """Removes ingredient from new recipe"""
         selected = dpg.get_value("ingredients_list")
         current = dpg.get_value("ingredients_list")
-        if selected in current:
+        if selected and selected in current:
             current.remove(selected)
             dpg.set_value("ingredients_list", current)
     
     def save_recipe(self, sender, app_data):
         """Saves new recipe"""
         try:
-            name = dpg.get_value("recipe_name")
+            name = dpg.get_value("recipe_name").strip()
             ingredients = dpg.get_value("ingredients_list")
-            instructions = dpg.get_value("instructions")
+            instructions = dpg.get_value("instructions").strip()
             
             if not name:
                 raise InvalidIngredientError("Enter recipe name")
@@ -198,16 +198,15 @@ class RecipeApp:
             dpg.set_value("instructions", "")
             dpg.set_value("new_ingredient", "")
             
-            dpg.configure_item("modal_window", show=False)
         except RecipeError as e:
             self.show_error(str(e))
     
     def add_search_ingredient(self, sender, app_data):
         """Adds search ingredient"""
         ingredient = dpg.get_value("search_ingredient")
-        if ingredient:
+        if ingredient.strip():
             current = dpg.get_value("search_ingredients_list")
-            current.append(ingredient)
+            current.append(ingredient.strip())
             dpg.set_value("search_ingredients_list", current)
             dpg.set_value("search_ingredient", "")
     
@@ -215,7 +214,7 @@ class RecipeApp:
         """Removes search ingredient"""
         selected = dpg.get_value("search_ingredients_list")
         current = dpg.get_value("search_ingredients_list")
-        if selected in current:
+        if selected and selected in current:
             current.remove(selected)
             dpg.set_value("search_ingredients_list", current)
     
@@ -267,10 +266,15 @@ class RecipeApp:
     
     def show_error(self, message: str):
         """Shows error message"""
-        with dpg.window(label="Error", modal=True, show=True, tag="modal_window", 
-                       no_title_bar=True, width=300, height=100):
+        # Удаляем старое модальное окно если оно существует
+        if dpg.does_item_exist("error_modal"):
+            dpg.delete_item("error_modal")
+        
+        # Создаем новое модальное окно
+        with dpg.window(label="Error", modal=True, show=True, tag="error_modal", 
+                       no_title_bar=True, width=300, height=100, pos=[250, 250]):
             dpg.add_text(message)
-            dpg.add_button(label="OK", width=75, callback=lambda: dpg.configure_item("modal_window", show=False))
+            dpg.add_button(label="OK", width=75, callback=lambda: dpg.delete_item("error_modal"))
 
 
 if __name__ == "__main__":
