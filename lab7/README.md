@@ -312,3 +312,16 @@ if __name__ == "__main__":
 4. **Результаты** отображаются в интерфейсе
 
 5. **Пользователь** может экспортировать данные в Excel или Word
+
+
+
+## Результат работы программы
+
+### Интерфейс программы
+![result1](https://github.com/Lemka6ix/Python/blob/main/lab7/program.png)
+
+### Сохраненные данные в формате Word
+![result2](https://github.com/Lemka6ix/Python/blob/main/lab7/wordf.png)
+
+### Сохраненные данные в формате Excel
+![result2](https://github.com/Lemka6ix/Python/blob/main/lab7/excelf.png)

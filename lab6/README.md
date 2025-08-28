@@ -190,3 +190,14 @@ def create_gui():
     * Нажмите "Сохранить в Excel" для создания таблицы
 
     * Или "Сохранить в Word" для создания документа
+
+
+## Результат работы программы
+### Интерфейс программы
+![result1](https://github.com/Lemka6ix/Python/blob/main/lab6/program.png)
+
+### Сохраненные данные в формате Word
+![result2](https://github.com/Lemka6ix/Python/blob/main/lab6/word_file.png)
+
+### Сохраненные данные в формате Excel
+![result3](https://github.com/Lemka6ix/Python/blob/main/lab6/excel_file.png)
