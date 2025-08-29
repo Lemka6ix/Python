@@ -43,10 +43,16 @@ class Recipe:
             instructions=data["instructions"]
         )
     
-    def matches_ingredients(self, ingredients: Set[str]) -> bool:
-        """Checks if recipe contains all specified ingredients"""
-        return all(ingredient.lower() in {i.lower() for i in self.ingredients} 
-                  for ingredient in ingredients)
+    def contains_all_ingredients(self, search_ingredients: Set[str]) -> bool:
+        """Checks if recipe contains ALL specified ingredients"""
+        if not search_ingredients:
+            return False
+        
+        recipe_ingredients = {i.lower().strip() for i in self.ingredients}
+        search_ingredients_lower = {i.lower().strip() for i in search_ingredients}
+        
+        # Проверяем, что ВСЕ искомые ингредиенты есть в рецепте
+        return search_ingredients_lower.issubset(recipe_ingredients)
 
 
 class RecipeCatalog:
@@ -79,13 +85,17 @@ class RecipeCatalog:
         return None
     
     def find_recipes_by_ingredients(self, ingredients: List[str]) -> List[Recipe]:
-        """Finds recipes containing all specified ingredients"""
-        if not ingredients or all(not i.strip() for i in ingredients):
+        """Finds recipes containing ALL specified ingredients"""
+        if not ingredients:
             raise InvalidIngredientError("At least one ingredient must be specified")
         
-        ingredient_set = {i.strip().lower() for i in ingredients if i.strip()}
+        # Фильтруем пустые строки
+        ingredient_set = {i.strip() for i in ingredients if i.strip()}
+        if not ingredient_set:
+            raise InvalidIngredientError("At least one valid ingredient must be specified")
+        
         return [recipe for recipe in self.recipes 
-                if recipe.matches_ingredients(ingredient_set)]
+                if recipe.contains_all_ingredients(ingredient_set)]
     
     def save_recipes(self):
         """Saves recipes to file"""
@@ -95,12 +105,19 @@ class RecipeCatalog:
     def load_recipes(self):
         """Loads recipes from file"""
         if os.path.exists("recipes.json"):
-            with open("recipes.json", "r", encoding="utf-8") as f:
-                try:
+            try:
+                with open("recipes.json", "r", encoding="utf-8") as f:
                     data = json.load(f)
                     self.recipes = [Recipe.from_dict(item) for item in data]
-                except json.JSONDecodeError:
-                    self.recipes = []
+                    print(f"Loaded {len(self.recipes)} recipes from file")
+                    for recipe in self.recipes:
+                        print(f"  - {recipe.name}: {recipe.ingredients}")
+            except (json.JSONDecodeError, FileNotFoundError):
+                self.recipes = []
+                print("No recipes found or error loading file")
+        else:
+            self.recipes = []
+            print("No recipes file found")
 
 
 class RecipeApp:
@@ -108,9 +125,8 @@ class RecipeApp:
     def __init__(self):
         self.catalog = RecipeCatalog()
         self.selected_recipe = None
-        self.current_ingredients = []
-        self.ingredients_list = []  # Храним список ингредиентов для нового рецепта
-        self.search_ingredients_list = []  # Храним список ингредиентов для поиска
+        self.new_recipe_ingredients = []  # Ингредиенты для нового рецепта
+        self.search_ingredients = []      # Ингредиенты для поиска
         
         dpg.create_context()
         self.setup_ui()
@@ -131,8 +147,8 @@ class RecipeApp:
                 dpg.add_button(label="Add", callback=self.add_ingredient)
             
             dpg.add_text("Ingredients:")
-            dpg.add_listbox(tag="ingredients_list_display", items=self.ingredients_list, width=300, num_items=5)
-            dpg.add_button(label="Remove Ingredient", callback=self.remove_ingredient)
+            dpg.add_listbox(tag="ingredients_list", items=self.new_recipe_ingredients, width=300, num_items=5)
+            dpg.add_button(label="Remove Selected", callback=self.remove_ingredient)
             
             dpg.add_input_text(label="Instructions", tag="instructions", multiline=True, height=150, width=300)
             dpg.add_button(label="Save Recipe", callback=self.save_recipe)
@@ -144,15 +160,15 @@ class RecipeApp:
                 dpg.add_button(label="Add", callback=self.add_search_ingredient)
             
             dpg.add_text("Search by ingredients:")
-            dpg.add_listbox(tag="search_ingredients_list_display", items=self.search_ingredients_list, width=300, num_items=5)
-            dpg.add_button(label="Remove Ingredient", callback=self.remove_search_ingredient)
+            dpg.add_listbox(tag="search_ingredients_list", items=self.search_ingredients, width=300, num_items=5)
+            dpg.add_button(label="Remove Selected", callback=self.remove_search_ingredient)
             dpg.add_button(label="Find Recipes", callback=self.search_recipes)
             
             dpg.add_text("Found Recipes:")
             dpg.add_listbox(tag="found_recipes_list", items=[], width=300, num_items=5,
                           callback=self.select_found_recipe)
             
-            dpg.add_button(label="Delete Recipe", callback=self.delete_recipe)
+            dpg.add_button(label="Delete Selected", callback=self.delete_recipe)
         
         # View recipe window
         with dpg.window(label="View Recipe", tag="view_recipe_window", width=600, height=400, pos=[100, 500], show=False):
@@ -165,38 +181,40 @@ class RecipeApp:
     def add_ingredient(self, sender, app_data):
         """Adds ingredient to new recipe"""
         ingredient = dpg.get_value("new_ingredient")
-        if ingredient.strip():
-            self.ingredients_list.append(ingredient.strip())
-            dpg.set_value("ingredients_list_display", self.ingredients_list)
+        if ingredient and ingredient.strip():
+            self.new_recipe_ingredients.append(ingredient.strip())
+            dpg.set_value("ingredients_list", self.new_recipe_ingredients)
             dpg.set_value("new_ingredient", "")
     
     def remove_ingredient(self, sender, app_data):
         """Removes ingredient from new recipe"""
-        selected = dpg.get_value("ingredients_list_display")
-        if selected and selected in self.ingredients_list:
-            self.ingredients_list.remove(selected)
-            dpg.set_value("ingredients_list_display", self.ingredients_list)
+        selected = dpg.get_value("ingredients_list")
+        if selected and selected in self.new_recipe_ingredients:
+            self.new_recipe_ingredients.remove(selected)
+            dpg.set_value("ingredients_list", self.new_recipe_ingredients)
     
     def save_recipe(self, sender, app_data):
         """Saves new recipe"""
         try:
-            name = dpg.get_value("recipe_name").strip()
-            instructions = dpg.get_value("instructions").strip()
+            name = dpg.get_value("recipe_name")
+            instructions = dpg.get_value("instructions")
             
-            if not name:
+            if not name or not name.strip():
                 raise InvalidIngredientError("Enter recipe name")
-            if not self.ingredients_list:
+            if not self.new_recipe_ingredients:
                 raise InvalidIngredientError("Add at least one ingredient")
             
-            recipe = Recipe(name, self.ingredients_list.copy(), instructions)
+            recipe = Recipe(name.strip(), self.new_recipe_ingredients.copy(), instructions.strip())
             self.catalog.add_recipe(recipe)
             
             # Clear fields
             dpg.set_value("recipe_name", "")
-            self.ingredients_list = []
-            dpg.set_value("ingredients_list_display", [])
+            self.new_recipe_ingredients = []
+            dpg.set_value("ingredients_list", [])
             dpg.set_value("instructions", "")
             dpg.set_value("new_ingredient", "")
+            
+            print(f"✓ Recipe '{name}' saved with ingredients: {recipe.ingredients}")
             
         except RecipeError as e:
             self.show_error(str(e))
@@ -204,23 +222,30 @@ class RecipeApp:
     def add_search_ingredient(self, sender, app_data):
         """Adds search ingredient"""
         ingredient = dpg.get_value("search_ingredient")
-        if ingredient.strip():
-            self.search_ingredients_list.append(ingredient.strip())
-            dpg.set_value("search_ingredients_list_display", self.search_ingredients_list)
+        if ingredient and ingredient.strip():
+            self.search_ingredients.append(ingredient.strip())
+            dpg.set_value("search_ingredients_list", self.search_ingredients)
             dpg.set_value("search_ingredient", "")
     
     def remove_search_ingredient(self, sender, app_data):
         """Removes search ingredient"""
-        selected = dpg.get_value("search_ingredients_list_display")
-        if selected and selected in self.search_ingredients_list:
-            self.search_ingredients_list.remove(selected)
-            dpg.set_value("search_ingredients_list_display", self.search_ingredients_list)
+        selected = dpg.get_value("search_ingredients_list")
+        if selected and selected in self.search_ingredients:
+            self.search_ingredients.remove(selected)
+            dpg.set_value("search_ingredients_list", self.search_ingredients)
     
     def search_recipes(self, sender, app_data):
         """Searches recipes by ingredients"""
         try:
-            recipes = self.catalog.find_recipes_by_ingredients(self.search_ingredients_list)
-            dpg.set_value("found_recipes_list", [recipe.name for recipe in recipes])
+            print(f"🔍 Searching for recipes with ALL ingredients: {self.search_ingredients}")
+            print(f"📋 Available recipes: {[r.name for r in self.catalog.recipes]}")
+            
+            recipes = self.catalog.find_recipes_by_ingredients(self.search_ingredients)
+            recipe_names = [recipe.name for recipe in recipes]
+            
+            print(f"✅ Found {len(recipes)} recipes: {recipe_names}")
+            dpg.set_value("found_recipes_list", recipe_names)
+            
         except RecipeError as e:
             self.show_error(str(e))
     
@@ -236,8 +261,8 @@ class RecipeApp:
         """Shows recipe details"""
         dpg.set_value("view_recipe_name", f"Recipe: {recipe.name}")
         
-        # Format ingredients
-        ingredients_text = "\n".join(recipe.ingredients)
+        # Format ingredients with bullet points
+        ingredients_text = "\n".join([f"• {ingredient}" for ingredient in recipe.ingredients])
         dpg.set_value("view_recipe_ingredients", ingredients_text)
         
         dpg.set_value("view_recipe_instructions", recipe.instructions)
@@ -250,8 +275,8 @@ class RecipeApp:
             try:
                 self.catalog.remove_recipe(recipe_name)
                 # Update found recipes list
-                if self.search_ingredients_list:
-                    recipes = self.catalog.find_recipes_by_ingredients(self.search_ingredients_list)
+                if self.search_ingredients:
+                    recipes = self.catalog.find_recipes_by_ingredients(self.search_ingredients)
                     dpg.set_value("found_recipes_list", [recipe.name for recipe in recipes])
                 else:
                     dpg.set_value("found_recipes_list", [])
@@ -262,11 +287,9 @@ class RecipeApp:
     
     def show_error(self, message: str):
         """Shows error message"""
-        # Удаляем старое модальное окно если оно существует
         if dpg.does_item_exist("error_modal"):
             dpg.delete_item("error_modal")
         
-        # Создаем новое модальное окно
         with dpg.window(label="Error", modal=True, show=True, tag="error_modal", 
                        no_title_bar=True, width=300, height=100, pos=[250, 250]):
             dpg.add_text(message)
