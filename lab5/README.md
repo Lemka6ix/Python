@@ -57,7 +57,7 @@ print(' '.join(map(str, result)))
 
 ## Результаты работы программы
 
-![result1]()
+![result1](https://github.com/Lemka6ix/Python/blob/main/lab5/incorrect.png)
 
 ### Пояснение
 
@@ -85,4 +85,4 @@ elem[0] % 2 == (elem[1] + elem[2]) % 2
 * `1 == 1` ✓ (добавляем в результат) 
 
 
-![result2]()
+![result2](https://github.com/Lemka6ix/Python/blob/main/lab5/correct.png)
