@@ -28,7 +28,7 @@ print(primes)
 
 ## Результат выполнения
 
-![result1](https://github.com/Lemka6ix/Python/blob/main/lab4py/zam.png)
+![result1](https://github.com/Lemka6ix/Python/blob/main/lab4/zam.png)
 
 
 ## Задание 2
@@ -82,4 +82,4 @@ except TimeoutError:
 * Иначе печатает список простых чисел.
 
 ## Результат выполнения
-![result2](https://github.com/Lemka6ix/Python/blob/main/lab4py/dec.png)
+![result2](https://github.com/Lemka6ix/Python/blob/main/lab4/dec.png)
