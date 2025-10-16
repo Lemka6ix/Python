@@ -1,11 +1,5 @@
 def calculate_ssd(data_size_gb, price_per_unit, speed_mbps=550):
-    """
-    Рассчитывает время и стоимость для SSD
-    :param data_size_gb: объем данных в ГБ
-    :param price_per_unit: цена устройства
-    :param speed_mbps: скорость в Мбит/с (по умолчанию 550)
-    :return: словарь с результатами
-    """
+
     data_size_mbits = data_size_gb * 8000
     time_seconds = data_size_mbits / speed_mbps
     
