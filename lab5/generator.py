@@ -1,5 +1,5 @@
 n = int(input())
-matrix = [list(map(int, input().split())) for _ in range(n)]
+matrix = [list(map(int, input().split())) for i in range(n)]
 
 def spiral_generator(matrix):
     n = len(matrix)
