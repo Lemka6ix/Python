@@ -48,6 +48,7 @@ print(prime_finder(100))
 ```python
 import time
 
+
 def time_limit(timeout):
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -59,6 +60,7 @@ def time_limit(timeout):
             return result
         return wrapper
     return decorator
+
 
 def create_prime_finder():
     primes_cache = {}  # Кэш для хранения результатов
