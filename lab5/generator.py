@@ -2,12 +2,12 @@ n = int(input())
 matrix = [list(map(int, input().split())) for i in range(n)]
 
 def spiral_generator(matrix):
-    n = len(matrix)
-    x, y = n // 2, n // 2
-    dx, dy = 0, 1
-    step = 1
+    n = len(matrix)    # размер
+    x, y = n // 2, n // 2  # центр
+    dx, dy = 0, 1   # задаем направление по час. вправо
+    step = 1     
     count = 1
-    yield matrix[x][y], x, y
+    yield matrix[x][y], x, y   # Возвращаем центральный элемент
     while count < n * n:
         for _ in range(step):
             x += dx
