@@ -1,7 +1,7 @@
 def create_prime_finder():
     primes_cache = {}  # Кэш для хранения результатов
     
-    def get_primes(n):
+    def get_primes(n):  #замыкание, которое помнит primes_cache
         if n in primes_cache:
             return primes_cache[n]
         
