@@ -99,7 +99,7 @@ except TimeoutError:
 * Запускаем исходную функцию → `result = get_primes(100000)`
 * Останавливаем секундомер → `end_time = time.time()`
 * Проверяем не превысили ли лимит → `if end_time - start_time > 1`
-* Если превысили — кричим "СТОП!" → `raise TimeoutError`
+* Если превысили — то стоп → `raise TimeoutError`
 
 ## Результат выполнения
 ![result2](https://github.com/Lemka6ix/Python/blob/main/lab4/dec.png)

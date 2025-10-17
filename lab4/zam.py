@@ -22,4 +22,4 @@ def create_prime_finder():
 
 
 prime_finder = create_prime_finder()
-print(prime_finder(100))
+print(prime_finder(10))

@@ -15,7 +15,7 @@ def time_limit(timeout):   #создает и возвращает сам дек
 def create_prime_finder():
     primes_cache = {}  # Кэш для хранения результатов
     
-    @time_limit(1)
+    @time_limit(0.1)
     def get_primes(n):
         if n in primes_cache:
             return primes_cache[n]
@@ -38,8 +38,10 @@ def create_prime_finder():
 
 prime_finder = create_prime_finder()  
 
-try:
-    primes = prime_finder(100000)  
-    print(primes)
-except TimeoutError:
-    print("Функция превысила лимит времени")
+# try:
+#     primes = prime_finder(100000)  
+#     print(primes)
+# except TimeoutError:
+#     print("Функция превысила лимит времени")
+primes = prime_finder(100000)
+print(primes)
