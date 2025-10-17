@@ -196,10 +196,10 @@ def create_gui():
 
 ## Результат работы программы
 ### Интерфейс программы
-![result1](https://github.com/Lemka6ix/Python/blob/main/lab6/program.png)
+![result1](https://github.com/Lemka6ix/Python/blob/main/lab6/png/program.png)
 
 ### Сохраненные данные в формате Word
-![result2](https://github.com/Lemka6ix/Python/blob/main/lab6/word_file.png)
+![result2](https://github.com/Lemka6ix/Python/blob/main/lab6/png/word_file.png)
 
 ### Сохраненные данные в формате Excel
-![result3](https://github.com/Lemka6ix/Python/blob/main/lab6/excel_file.png)
+![result3](https://github.com/Lemka6ix/Python/blob/main/lab6/png/excel_file.png)
