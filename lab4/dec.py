@@ -12,10 +12,11 @@ def time_limit(timeout):   #создает и возвращает сам дек
         return wrapper
     return decorator
 
+@time_limit(1)
 def create_prime_finder():
     primes_cache = {}  # Кэш для хранения результатов
     
-    @time_limit(1)
+    #@time_limit(1)
     def get_primes(n):
         if n in primes_cache:
             return primes_cache[n]
