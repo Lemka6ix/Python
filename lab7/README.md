@@ -318,10 +318,10 @@ if __name__ == "__main__":
 ## Результат работы программы
 
 ### Интерфейс программы
-![result1](https://github.com/Lemka6ix/Python/blob/main/lab7/program.png)
+![result1](https://github.com/Lemka6ix/Python/blob/main/lab7/png/program.png)
 
 ### Сохраненные данные в формате Word
-![result2](https://github.com/Lemka6ix/Python/blob/main/lab7/wordf.png)
+![result2](https://github.com/Lemka6ix/Python/blob/main/lab7/png/wordf.png)
 
 ### Сохраненные данные в формате Excel
-![result2](https://github.com/Lemka6ix/Python/blob/main/lab7/excelf.png)
+![result2](https://github.com/Lemka6ix/Python/blob/main/lab7/png/excelf.png)
