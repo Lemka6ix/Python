@@ -1,11 +1,11 @@
 import time
 
-def time_limit(timeout):
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            start_time = time.time()
-            result = func(*args, **kwargs)  
-            end_time = time.time()
+def time_limit(timeout):   #создает и возвращает сам декоратор, timeout - число сек
+    def decorator(func):   # func - исходная функция, которую декорируем
+        def wrapper(*args, **kwargs):   # args, kwargs - аргументы исходной функции
+            start_time = time.time()  # Засекаем время начала выполнения
+            result = func(*args, **kwargs)    # вызываем исходную функцию с её оригинальными аргументами 
+            end_time = time.time()   # Засекаем время окончания выполнения
             if end_time - start_time > timeout:
                 raise TimeoutError("Function exceeded time limit")
             return result
