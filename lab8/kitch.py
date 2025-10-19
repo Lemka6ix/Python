@@ -5,29 +5,29 @@ import os
 
 
 class RecipeError(Exception):
-    """Base exception for recipe errors"""
+    """Исключение для ошибок рецептов"""
     pass
 
 
 class RecipeNotFoundError(RecipeError):
-    """Exception for when recipe is not found"""
+    """Исключение, когда рецепт не найден"""
     pass
 
 
 class InvalidIngredientError(RecipeError):
-    """Exception for invalid ingredients"""
+    """Исключение для недопустимых ингредиентов"""
     pass
 
 
 class Recipe:
-    """Class representing a recipe"""
+
     def __init__(self, name: str, ingredients: List[str], instructions: str):
         self.name = name
         self.ingredients = ingredients
         self.instructions = instructions
     
     def to_dict(self) -> Dict:
-        """Converts recipe to dictionary for serialization"""
+        """Рецепт в словарь"""
         return {
             "name": self.name,
             "ingredients": self.ingredients,
@@ -36,7 +36,7 @@ class Recipe:
     
     @classmethod
     def from_dict(cls, data: Dict) -> 'Recipe':
-        """Creates recipe from dictionary"""
+        """Создает рецепт из словаря"""
         return cls(
             name=data["name"],
             ingredients=data["ingredients"],
@@ -44,7 +44,7 @@ class Recipe:
         )
     
     def matches_ingredients(self, search_ingredients: Set[str]) -> bool:
-        """Checks if recipe contains ALL specified ingredients"""
+        """Проверяет содержит ли рецепт все указанные ингредиенты"""
         if not search_ingredients:
             return False
         
@@ -55,20 +55,20 @@ class Recipe:
 
 
 class RecipeCatalog:
-    """Class for managing recipe catalog"""
+    """Класс для управления котологом рецептов"""
     def __init__(self):
         self.recipes: List[Recipe] = []
         self.load_recipes()
     
     def add_recipe(self, recipe: Recipe):
-        """Adds recipe to catalog"""
+        """добавляет рецепт в каталог"""
         if not recipe.name or not recipe.ingredients:
             raise InvalidIngredientError("Recipe name and ingredients are required")
         self.recipes.append(recipe)
         self.save_recipes()
     
     def remove_recipe(self, recipe_name: str):
-        """Removes recipe from catalog"""
+        """удаляет рецепт из каталога"""
         recipe = self.find_recipe(recipe_name)
         if recipe:
             self.recipes.remove(recipe)
@@ -77,14 +77,14 @@ class RecipeCatalog:
             raise RecipeNotFoundError(f"Recipe '{recipe_name}' not found")
     
     def find_recipe(self, recipe_name: str) -> Recipe:
-        """Finds recipe by name"""
+        """Находит рецепт по имени"""
         for recipe in self.recipes:
             if recipe.name.lower() == recipe_name.lower():
                 return recipe
         return None
     
     def find_recipes_by_ingredients(self, ingredients: List[str]) -> List[Recipe]:
-        """Finds recipes containing ALL specified ingredients"""
+        """Находит рецепты содержащие все указанные ингредиенты"""
         if not ingredients:
             raise InvalidIngredientError("At least one ingredient must be specified")
         
@@ -96,12 +96,12 @@ class RecipeCatalog:
                 if recipe.matches_ingredients(ingredient_set)]
     
     def save_recipes(self):
-        """Saves recipes to file"""
+        """Сохранение рецепта в файл"""
         with open("recipes.json", "w", encoding="utf-8") as f:
             json.dump([recipe.to_dict() for recipe in self.recipes], f, ensure_ascii=False, indent=2)
     
     def load_recipes(self):
-        """Loads recipes from file"""
+        """загружает рецепты из файла"""
         if os.path.exists("recipes.json"):
             try:
                 with open("recipes.json", "r", encoding="utf-8") as f:
@@ -114,7 +114,7 @@ class RecipeCatalog:
 
 
 class RecipeApp:
-    """GUI application class for recipe catalog"""
+    """GUI класс для каталога рецептов"""
     def __init__(self):
         self.catalog = RecipeCatalog()
         self.selected_recipe = None
@@ -124,15 +124,15 @@ class RecipeApp:
         
         dpg.create_context()
         self.setup_ui()
-        dpg.create_viewport(title='Recipe Catalog', width=1000, height=600)
+        dpg.create_viewport(title='Recipe Catalog', width=1300, height=600)
         dpg.setup_dearpygui()
         dpg.show_viewport()
         dpg.start_dearpygui()
         dpg.destroy_context()
     
     def setup_ui(self):
-        """Sets up user interface"""
-        # Add recipe window
+        """UI настройка"""
+        # Окно "Add recipe"
         with dpg.window(label="Add Recipe", tag="add_recipe_window", width=400, height=400, pos=[50, 50]):
             dpg.add_input_text(label="Recipe Name", tag="recipe_name")
             
@@ -147,7 +147,7 @@ class RecipeApp:
             dpg.add_input_text(label="Instructions", tag="instructions", multiline=True, height=150, width=300)
             dpg.add_button(label="Save Recipe", callback=self.save_recipe)
         
-        # Search recipes window
+        # Окно "Search recipes"
         with dpg.window(label="Search Recipes", tag="search_window", width=400, height=400, pos=[500, 50]):
             with dpg.group(horizontal=True):
                 dpg.add_input_text(label="Search Ingredient", tag="search_ingredient", width=200)
@@ -164,8 +164,8 @@ class RecipeApp:
             
             dpg.add_button(label="Delete Selected", callback=self.delete_recipe)
         
-        # View recipe window
-        with dpg.window(label="View Recipe", tag="view_recipe_window", width=600, height=400, pos=[100, 500], show=False):
+        # Оно "View recipe"
+        with dpg.window(label="View Recipe", tag="view_recipe_window", width=300, height=400, pos=[950, 50], show=False):
             dpg.add_text("", tag="view_recipe_name")
             dpg.add_text("Ingredients:", tag="view_recipe_ingredients_label")
             dpg.add_text("", tag="view_recipe_ingredients", bullet=True)
@@ -274,7 +274,7 @@ class RecipeApp:
                 self.show_error(str(e))
     
     def show_error(self, message: str):
-        """сообщения об ошибке"""
+        """Shows error message"""
         if dpg.does_item_exist("error_modal"):
             dpg.delete_item("error_modal")
         
