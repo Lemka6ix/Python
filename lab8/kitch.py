@@ -274,7 +274,7 @@ class RecipeApp:
                 self.show_error(str(e))
     
     def show_error(self, message: str):
-        """Shows error message"""
+        """сообщения об ошибке"""
         if dpg.does_item_exist("error_modal"):
             dpg.delete_item("error_modal")
         

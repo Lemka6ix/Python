@@ -343,7 +343,7 @@ class RecipeApp:
 
 #### Окно 1: "Add Recipe" (Добавить рецепт)
 
-![result1](https://github.com/Lemka6ix/Python/blob/main/lab8/AddR.png)
+![result1](https://github.com/Lemka6ix/Python/blob/main/lab8/png/AddR.png)
 
 * Поле "**Recipe Name**" - ввод названия рецепта
 
@@ -359,7 +359,7 @@ class RecipeApp:
 
 #### Окно 2: "Search Recipes" (Поиск рецептов)
 
-![result2](https://github.com/Lemka6ix/Python/blob/main/lab8/SearchR.png)
+![result2](https://github.com/Lemka6ix/Python/blob/main/lab8/png/SearchR.png)
 
 * Поле "**Search Ingredient**" + кнопка "**Add**" - добавляет ингредиенты для поиска
 
@@ -375,7 +375,7 @@ class RecipeApp:
 
 
 #### Окно 3: "View Recipe" (Просмотр рецепта)
-![result3](https://github.com/Lemka6ix/Python/blob/main/lab8/ViewR.png)
+![result3](https://github.com/Lemka6ix/Python/blob/main/lab8/png/ViewR.png)
 
 * Показывается при выборе рецепта из списка
 
